@@ -1,0 +1,35 @@
+/* Lightweight page entrance */
+body {
+  animation: dreamyEnter 0.35s ease-out both;
+}
+
+@keyframes dreamyEnter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Lightweight page exit */
+body.page-leaving {
+  animation: dreamyExit 0.2s ease-in forwards !important;
+  pointer-events: none;
+}
+
+@keyframes dreamyExit {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body,
+  body.page-leaving {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fff5fb" />
+  <meta name="description" content="A little note, made with a little courage." />
+  <title>A Little Note for You ♡</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="music.css">
+  <script src="music.js" defer></script>
+  <link rel="stylesheet" href="./transition.css">
+  <script src="./transition.js" defer></script>
+</head>
+
+<body>
+  <div class="sky-glow glow-one"></div>
+  <div class="sky-glow glow-two"></div>
+  <div class="petals" id="petals" aria-hidden="true"></div>
+
+  <main class="page">
+
+    <div class="tiny-label">
+      <span class="sparkle">✦</span>
+      A LITTLE SOMETHING FOR YOU
+      <span class="sparkle">✦</span>
+    </div>
+
+    <!-- OPENING SCREEN -->
+    <section class="intro" id="intro">
+
+      <div class="heart-orbit" aria-hidden="true">
+        <span class="orbit-heart heart-a">♡</span>
+        <span class="orbit-heart heart-b">♥</span>
+        <span class="orbit-heart heart-c">✧</span>
+        <div class="main-heart">♡</div>
+      </div>
+
+      <p class="eyebrow">made with a little courage</p>
+
+      <h1>SEGANII</h1>
+
+      <p class="subtitle">
+        I wanted to remind you of something<br class="desktop-break" />
+        you might not hear enough.
+      </p>
+
+      <button class="primary-button" id="openNote" type="button">
+        ya thechaa!<span>↗</span>
+      </button>
+
+      <p class="hint">no pressure, just a little kindness ♡</p>
+    </section>
+
+    <!-- APPRECIATION LETTER -->
+    <section
+      class="letter-wrap hidden"
+      id="letterWrap"
+      aria-live="polite"
+    >
+
+      <article class="letter">
+
+        <div class="letter-top">
+          <span>just for you</span>
+          <span class="letter-flower">✿</span>
+        </div>
+
+        <div class="letter-rule"></div>
+
+        <p class="letter-greeting">Hi you,</p>
+
+        <p class="letter-copy" id="typedMessage"></p>
+        <span class="cursor" id="cursor">|</span>
+
+        <p class="letter-signoff hidden" id="signoff">
+          Take care of that lovely heart of yours.
+          <span>♡</span>
+        </p>
+
+        <div class="letter-footer">
+          <span>with a little warmth,</span>
+          <span class="signature">someone who appreciates you</span>
+        </div>
+
+      </article>
+
+      <!-- GALLERY SURPRISE BUTTON -->
+      <button
+        class="text-button"
+        id="surpriseButton"
+        type="button"
+      >
+        aabaaa yaa ♡
+      </button>
+
+      <!-- ANIMATED PHOTO GALLERY -->
+      <div
+        class="surprise hidden"
+        id="surprise"
+        aria-live="polite"
+      >
+
+        <div class="gallery-heading">
+          <span class="gallery-kicker">
+            A LITTLE BOX OF MEMORIES ✧
+          </span>
+
+          <h2>
+            Little moments,
+            <em>little magic.</em>
+          </h2>
+
+          <p>
+            Some things are too lovely to leave unshared. ♡
+          </p>
+        </div>
+
+        <div class="memory-gallery">
+
+          <!-- PHOTO 1 -->
+          <figure class="memory-card memory-one">
+            <div class="memory-photo">
+              <img
+                src="images/photo1.jpg"
+                alt="A little memory"
+                loading="lazy"
+              />
+              <span class="photo-heart" aria-hidden="true">♡</span>
+            </div>
+
+            <figcaption>
+              <span class="memory-number">MEMORY 01</span>
+              <p>A moment worth keeping ✿</p>
+            </figcaption>
+          </figure>
+
+          <!-- PHOTO 2 -->
+          <figure class="memory-card memory-two">
+            <div class="memory-photo">
+              <img
+                src="images/photo2.jpg"
+                alt="A beautiful moment"
+                loading="lazy"
+              />
+              <span class="photo-heart" aria-hidden="true">♡</span>
+            </div>
+
+            <figcaption>
+              <span class="memory-number">MEMORY 02</span>
+              <p>A little piece of happiness ☁</p>
+            </figcaption>
+          </figure>
+
+          <!-- PHOTO 3 -->
+          <figure class="memory-card memory-three">
+            <div class="memory-photo">
+              <img
+                src="images/photo3.jpg"
+                alt="A favorite memory"
+                loading="lazy"
+              />
+              <span class="photo-heart" aria-hidden="true">♡</span>
+            </div>
+
+            <figcaption>
+              <span class="memory-number">MEMORY 03</span>
+              <p>Something that makes me smile ♡</p>
+            </figcaption>
+          </figure>
+
+          <!-- PHOTO 4 -->
+          <figure class="memory-card memory-four">
+            <div class="memory-photo">
+              <img
+                src="images/photo4.jpg"
+                alt="A sweet memory"
+                loading="lazy"
+              />
+              <span class="photo-heart" aria-hidden="true">♡</span>
+            </div>
+
+            <figcaption>
+              <span class="memory-number">MEMORY 04</span>
+              <p>Just because you're special ✧</p>
+            </figcaption>
+          </figure>
+
+        </div>
+
+        <!-- FINAL GALLERY MESSAGE -->
+        <div class="gallery-ending">
+          <span aria-hidden="true">♡</span>
+
+          <p>
+            And somehow, the little things become the lovely things.
+          </p>
+
+          <small>made with a little courage, just for you</small>
+        </div>
+
+      </div>
+
+    
+    </section>
+
+    <footer>
+      small note, sincere feelings <span>♡</span>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
