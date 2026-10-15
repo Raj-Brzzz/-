@@ -351,3 +351,38 @@ button, input, textarea {
         max-width: 100%;
     }
 }
+
+/* Small romantic GIF beneath the glowing heart */
+
+.little-gif {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 8px auto 18px;
+  position: relative;
+  z-index: 2;
+}
+
+.little-gif img {
+  display: block;
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  border: none;
+  border-radius: 12px;
+  opacity: 0.95;
+  filter: drop-shadow(0 0 9px rgba(255, 160, 205, 0.2));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.little-gif img:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 13px rgba(255, 160, 205, 0.45));
+}
+
+@media (max-width: 480px) {
+  .little-gif img {
+    width: 68px;
+    height: 68px;
+  }
+}
