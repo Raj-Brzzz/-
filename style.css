@@ -26,9 +26,9 @@ body {
   overflow-x: hidden;
   color: var(--ink);
   font-family: 'DM Sans', sans-serif;
-  background:
-    radial-gradient(ellipse at 50% 0%, #fffaff 0%, transparent 52%),
-    linear-gradient(145deg, #fff8fc 0%, #f9effa 47%, #fff4f5 100%);
+ background:
+    radial-gradient(ellipse at 50% 0%, #fffdf8 0%, transparent 52%),
+    linear-gradient(145deg, #fbf5eb 0%, #fffaf3 50%, #f8eee7 100%);
 }
 
 button {
