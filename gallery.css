@@ -1,4 +1,10 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap');
+
+/* =========================================
+   SEGANII — DREAMY MEMORY GALLERY
+   Soft colors, responsive cards, subtle hearts
+   ========================================= */
 
 :root {
   --pink: #e9a6c0;
@@ -7,26 +13,39 @@
   --cream: #fffaf7;
   --ink: #59434f;
   --muted: #9c8490;
+  --border: #efdce5;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 body {
-  margin: 0;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 100vh;
-  overflow-x: hidden;
+  margin: 0;
+  overflow-x: clip;
+
   background:
     radial-gradient(ellipse at 10% 10%, #f9e7f0 0, transparent 40%),
     radial-gradient(ellipse at 90% 40%, #f7e8f5 0, transparent 38%),
     #fffaf7;
+
   color: var(--ink);
   font-family: "DM Sans", sans-serif;
+  -webkit-text-size-adjust: 100%;
 }
 
 button,
@@ -43,14 +62,28 @@ a {
   text-decoration: none;
 }
 
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea {
+  max-width: 100%;
+}
+
+/* BACKGROUND GLOW */
+
 .background-glow {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+
   background:
-    radial-gradient(circle at 80% 20%, #f2c7dc55, transparent 28%),
-    radial-gradient(circle at 15% 75%, #e9d1f055, transparent 30%);
+    radial-gradient(circle at 80% 20%, #f2c7dc33, transparent 28%),
+    radial-gradient(circle at 15% 75%, #e9d1f033, transparent 30%);
 }
 
 .gallery-header,
@@ -60,13 +93,17 @@ a {
   z-index: 1;
 }
 
+/* HEADER */
+
 .gallery-header {
+  display: flex;
   width: min(1100px, calc(100% - 40px));
+  max-width: 100%;
   margin: auto;
   padding: 28px 0;
-  display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
 .back-link {
@@ -83,10 +120,14 @@ a {
   color: var(--pink-dark);
   font-size: 12px;
   letter-spacing: 1px;
+  text-align: right;
 }
+
+/* MAIN CONTENT */
 
 .gallery-main {
   width: min(1000px, calc(100% - 36px));
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -103,6 +144,7 @@ a {
   font-size: 10px;
   letter-spacing: 3px;
   font-weight: 600;
+  line-height: 1.8;
 }
 
 .gallery-intro h1 {
@@ -126,7 +168,10 @@ a {
   line-height: 1.9;
 }
 
+/* LETTER PROGRESS */
+
 .progress-area {
+  width: 100%;
   max-width: 550px;
   margin: 0 auto 45px;
 }
@@ -134,12 +179,15 @@ a {
 .progress-labels {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 10px;
   color: var(--muted);
   font-size: 11px;
 }
 
 .progress-track {
+  width: 100%;
   height: 5px;
   overflow: hidden;
   border-radius: 20px;
@@ -154,8 +202,11 @@ a {
   transition: width 0.5s ease;
 }
 
+/* MEMORY ENVELOPE GRID */
+
 .memory-grid {
   display: grid;
+  width: 100%;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;
   gap: 24px;
@@ -164,12 +215,14 @@ a {
 .memory-card {
   min-width: 0;
   overflow: hidden;
-  border: 1px solid #efdce5;
+  border: 1px solid var(--border);
   border-radius: 20px;
   background: #fffdfc;
   box-shadow: 0 9px 30px #89566b0b;
   animation: fade-up 0.7s ease both;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .memory-card:nth-child(2) {
@@ -189,10 +242,13 @@ a {
   box-shadow: 0 14px 38px #89566b13;
 }
 
+/* ENVELOPES */
+
 .envelope {
   position: relative;
   display: flex;
   width: 100%;
+  min-width: 0;
   min-height: 220px;
   overflow: hidden;
   flex-direction: column;
@@ -201,16 +257,30 @@ a {
   gap: 10px;
   padding: 30px 20px;
   border: 0;
+  border-radius: 0;
   cursor: pointer;
   color: var(--ink);
+
   background:
     radial-gradient(circle at 20% 20%, #ffffffb5, transparent 35%),
     linear-gradient(145deg, #fff0f5, #f5dbe7);
-  transition: background 0.35s ease, transform 0.35s ease;
+
+  transition:
+    background 0.35s ease,
+    transform 0.35s ease;
 }
 
 .envelope:hover {
   background: linear-gradient(145deg, #fff6f9, #f0cddd);
+}
+
+.envelope:focus-visible,
+.close-memory:focus-visible,
+.final-button:focus-visible,
+.next-button:focus-visible,
+.back-link:focus-visible {
+  outline: 2px solid var(--pink-dark);
+  outline-offset: 4px;
 }
 
 .envelope-number {
@@ -272,16 +342,19 @@ a {
   background: #c77d9e;
   color: white;
   font-size: 14px;
-  transition: opacity 0.25s ease, transform 0.35s ease;
+  transition:
+    opacity 0.25s ease,
+    transform 0.35s ease;
 }
 
 .envelope:hover .envelope-icon {
   transform: translateY(-3px);
 }
 
-/* The open photo and note stay inside their own card. */
+/* OPEN LETTER CONTENT */
 
 .memory-content {
+  min-width: 0;
   padding: 22px 18px 24px;
   text-align: center;
   animation: reveal-memory 0.55s ease both;
@@ -313,20 +386,23 @@ a {
   display: none;
 }
 
-/* Photo frame: whole photo visible, flowers around all four corners. */
+/* PHOTO FRAMES */
 
 .photo-frame {
   position: relative;
   display: flex;
   width: 100%;
+  min-width: 0;
   min-height: 180px;
   align-items: center;
   justify-content: center;
   padding: 27px;
   border: 1px solid #edc7d8;
   border-radius: 15px;
+
   background:
     radial-gradient(circle at 50% 50%, #fff 0, #fff9fc 75%);
+
   box-shadow:
     inset 0 0 0 5px #fff,
     0 5px 18px #bd7e9916;
@@ -353,6 +429,8 @@ a {
   background: #fff;
   animation: photo-arrive 0.6s ease both;
 }
+
+/* DECORATIVE FLOWERS ON PHOTO CORNERS ONLY */
 
 .photo-flower {
   position: absolute;
@@ -394,20 +472,7 @@ a {
   animation-delay: 0.2s;
 }
 
-.memory-caption {
-  margin: 21px 0 7px;
-  color: var(--pink-dark);
-  font-family: "Cormorant Garamond", serif;
-  font-size: 25px;
-}
-
-.memory-note {
-  margin: 0 auto;
-  max-width: 440px;
-  color: #8c7380;
-  font-size: 12px;
-  line-height: 1.9;
-}
+/* FOLD BUTTON */
 
 .close-memory {
   margin-top: 19px;
@@ -425,6 +490,8 @@ a {
   background: #f9e5ed;
 }
 
+/* FINAL NOTE SECTION */
+
 .final-section {
   padding: 85px 0 55px;
   text-align: center;
@@ -433,6 +500,7 @@ a {
 .final-button,
 .next-button {
   display: inline-block;
+  max-width: 100%;
   padding: 14px 23px;
   border: 1px solid #e7bdcf;
   border-radius: 40px;
@@ -440,7 +508,9 @@ a {
   color: #a85f81;
   font-size: 12px;
   cursor: pointer;
-  transition: transform 0.25s ease, background 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease;
 }
 
 .final-button:hover,
@@ -450,6 +520,7 @@ a {
 }
 
 .final-note {
+  width: 100%;
   max-width: 520px;
   margin: 25px auto 35px;
   padding: 32px 25px;
@@ -492,6 +563,8 @@ a {
   margin: 28px auto 0;
 }
 
+/* FOOTER */
+
 .gallery-footer {
   padding: 20px;
   color: #b49ba7;
@@ -500,49 +573,49 @@ a {
   letter-spacing: 1px;
 }
 
-/* Falling flowers layer */
+/* SUBTLE FALLING HEARTS — NO FLOWER RAIN */
 
-.falling-flowers {
+.soft-falling-heart {
   position: fixed;
-  inset: 0;
-  z-index: 20;
-  overflow: hidden;
+  top: -25px;
+  z-index: 2;
   pointer-events: none;
-}
-
-.falling-flower {
-  position: absolute;
-  top: -55px;
-  display: block;
-  opacity: 0;
-  animation-name: flower-fall;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
+  user-select: none;
+  color: rgba(185, 104, 142, 0.42);
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-weight: 400;
+  animation: softHeartFall linear forwards;
   will-change: transform, opacity;
-  filter: drop-shadow(0 2px 3px #bd7e9922);
 }
 
-@keyframes flower-fall {
+@keyframes softHeartFall {
   0% {
-    transform: translate3d(0, -5vh, 0) rotate(0deg);
+    transform: translate3d(0, -5px, 0) rotate(-10deg);
     opacity: 0;
   }
-  10% {
-    opacity: 0.95;
+
+  15% {
+    opacity: 0.45;
   }
-  85% {
-    opacity: 0.85;
+
+  80% {
+    opacity: 0.28;
   }
+
   100% {
-    transform: translate3d(var(--drift, 50px), 115vh, 0) rotate(300deg);
+    transform: translate3d(var(--drift), 110vh, 0) rotate(12deg);
     opacity: 0;
   }
 }
+
+/* ANIMATIONS */
 
 @keyframes flower-sway {
   from {
     margin-top: -2px;
   }
+
   to {
     margin-top: 4px;
   }
@@ -553,6 +626,7 @@ a {
     opacity: 0;
     transform: translateY(18px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -564,6 +638,7 @@ a {
     opacity: 0;
     transform: translateY(12px) scale(0.985);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -575,28 +650,57 @@ a {
     opacity: 0;
     transform: scale(0.97);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
   }
 }
 
+/* MOBILE LAYOUT */
+
 @media (max-width: 650px) {
   .gallery-header {
+    width: calc(100% - 32px);
     padding: 20px 0;
   }
 
+  .header-heart {
+    font-size: 11px;
+  }
+
+  .gallery-main {
+    width: calc(100% - 30px);
+  }
+
   .gallery-intro {
-    margin-top: 35px;
+    margin: 35px auto 32px;
   }
 
   .gallery-intro h1 {
-    font-size: 43px;
+    font-size: clamp(36px, 10vw, 43px);
+  }
+
+  .eyebrow {
+    font-size: 9px;
+    letter-spacing: 2px;
+  }
+
+  .progress-area {
+    margin-bottom: 30px;
+  }
+
+  .progress-labels {
+    font-size: 10px;
   }
 
   .memory-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 18px;
+  }
+
+  .memory-card {
+    width: 100%;
   }
 
   .envelope {
@@ -620,17 +724,46 @@ a {
   }
 
   .final-section {
-    padding-top: 65px;
+    padding: 65px 0 45px;
+  }
+
+  .final-note {
+    padding: 27px 18px;
+  }
+
+  .final-note h2 {
+    font-size: 30px;
   }
 }
 
+/* REDUCED MOTION ACCESSIBILITY */
+
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  html {
+    scroll-behavior: auto;
+  }
+
+  .soft-falling-heart {
+    display: none;
+    animation: none;
+  }
+
+  .memory-card,
+  .memory-content,
+  .final-note,
+  .memory-photo {
+    animation: none;
+  }
+
+  .photo-flower {
+    animation: none;
+  }
+
+  .envelope,
+  .envelope-icon,
+  .final-button,
+  .next-button,
+  .close-memory {
+    transition: none;
   }
 }

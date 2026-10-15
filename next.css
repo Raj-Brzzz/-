@@ -312,3 +312,42 @@ h1 {
     transition-duration: 0.01ms !important;
   }
 }
+/* Mobile responsiveness and horizontal overflow fix */
+html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+body {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+img, video, iframe {
+    max-width: 100%;
+}
+
+button, input, textarea {
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    body {
+        min-width: 0;
+    }
+
+    .container,
+    .gallery,
+    .content,
+    .card {
+        max-width: 100%;
+    }
+}
