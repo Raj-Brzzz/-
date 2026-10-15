@@ -1,157 +1,148 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Little Memories ♡🌷</title>
-<link rel="stylesheet" href="./gallery.css">
-<script src="./gallery.js" defer></script>
-<link rel="stylesheet" href="./music.css">
-<script src="./music.js" defer></script>
-<link rel="stylesheet" href="./transition.css">
-<script src="./transition.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>A Little Bloom for You</title>
+
+    <link rel="stylesheet" href="./gallery.css">
+    <link rel="stylesheet" href="./music.css">
+    <link rel="stylesheet" href="./transition.css">
+
+    <script src="./gallery.js" defer></script>
+    <script src="./music.js" defer></script>
+    <script src="./transition.js" defer></script>
 </head>
 <body>
 
-  <div class="background-glow" aria-hidden="true"></div>
+    <header class="top-bar">
+        <a href="./index.html">← back</a>
+        <span>A LITTLE DIGITAL GARDEN</span>
+    </header>
 
-  <header class="gallery-header">
-    <a class="back-link" href="./index.html">← Back 💗</a>
-    <span class="header-heart">made with ♡ 🌸</span>
-  </header>
+    <main>
+        <section class="intro">
+            <p class="eyebrow">A SMALL CREATION, JUST BECAUSE</p>
+            <h1>A little <em>bloom</em> for you.</h1>
+            <p>Something simple, something pretty, something to brighten your day.</p>
+        </section>
 
-  <main class="gallery-main">
-    <section class="gallery-intro">
-      <p class="eyebrow">🌷 A LITTLE SOMETHING FOR YOU 🌷</p>
-    </section>
+        <section class="garden" id="garden">
+            <div class="ground"></div>
 
-    <section class="progress-area">
-      <div class="progress-labels">
-        <span id="progressText">0 of 4 letters opened 💌</span>
-        <span>♡ 🌸</span>
-      </div>
-      <div
-        class="progress-track"
-        id="progressTrack"
-        role="progressbar"
-        aria-valuemin="0"
-        aria-valuemax="4"
-        aria-valuenow="0"
-      >
-        <div id="progressBar"></div>
-      </div>
-    </section>
+            <div class="flower-stage">
+                <div class="sparkle sparkle-one">✦</div>
+                <div class="sparkle sparkle-two">✧</div>
+                <div class="sparkle sparkle-three">✧</div>
 
-    <section class="memory-grid" aria-label="Memory envelopes">
+                <div class="flower">
+                    <div class="stem"></div>
+                    <div class="leaf leaf-left"></div>
+                    <div class="leaf leaf-right"></div>
 
-      <article class="memory-card">
-        <button class="envelope" type="button" aria-expanded="false">
-          <span class="envelope-number">01 🌷</span>
-          <span class="envelope-icon">💌 </span>
-          <span class="envelope-title">🦋</span>
-          <span class="envelope-hint">Open me ♡ </span>
-          <span class="envelope-flap"></span>
-          <span class="envelope-seal">♡</span>
-        </button>
-        <div class="memory-content" hidden>
-          <div class="photo-frame">
-            <span class="photo-flower flower-top-left">🌸</span>
-            <span class="photo-flower flower-top-right">🌷</span>
-            <span class="photo-flower flower-bottom-left">🌷</span>
-            <span class="photo-flower flower-bottom-right">🌸</span>
-            <img class="memory-photo" src="images/her-photo-1.jpg" alt="pretty girl 🌸">
-          </div>
-      
-          <button class="close-memory" type="button">Fold 💌</button>
+                    <div class="petals">
+                        <span class="petal p1"></span>
+                        <span class="petal p2"></span>
+                        <span class="petal p3"></span>
+                        <span class="petal p4"></span>
+                        <span class="petal p5"></span>
+                        <span class="petal p6"></span>
+                        <span class="petal p7"></span>
+                        <span class="petal p8"></span>
+                    </div>
+
+                    <div class="flower-center"></div>
+                </div>
+
+                <p class="flower-caption" id="flowerCaption">
+                    Every little thing starts somewhere.
+                </p>
+            </div>
+
+            <button
+                class="bloom-button"
+                id="bloomButton"
+                type="button"
+                aria-expanded="false"
+                aria-controls="photoSection"
+            >
+                Let it bloom ✿
+            </button>
+        </section>
+
+        <section class="photo-section" id="photoSection" hidden>
+            <p class="eyebrow">A LITTLE COLOUR FOR THE DAY</p>
+            <h2>And here comes the <em>sunshine.</em></h2>
+            <p class="section-description">
+                A few lovely pictures, just as they are.
+            </p>
+
+            <div class="photo-gallery">
+                <button class="photo-card" type="button" aria-label="View photo 1">
+                    <img src="./images/her-photo-1.jpg" alt="Photo 1">
+                    <span>01</span>
+                </button>
+
+                <button class="photo-card" type="button" aria-label="View photo 2">
+                    <img src="./images/her-photo-2.jpg" alt="Photo 2">
+                    <span>02</span>
+                </button>
+
+                <button class="photo-card" type="button" aria-label="View photo 3">
+                    <img src="./images/her-photo-3.jpg" alt="Photo 3">
+                    <span>03</span>
+                </button>
+
+                <button class="photo-card" type="button" aria-label="View photo 4">
+                    <img src="./images/her-photo-4.jpg" alt="Photo 4">
+                    <span>04</span>
+                </button>
+            </div>
+
+            <p class="gallery-hint">Tap a picture to see it up close ✨</p>
+            <p class="finish-message">
+                Just a little something to make you smile. ✿
+            </p>
+        </section>
+
+        <div class="continue-area">
+            <a href="./next.html" class="next-button">
+                ya thechaaaa ✨ →
+            </a>
         </div>
-      </article>
+    </main>
 
-      <article class="memory-card">
-        <button class="envelope" type="button" aria-expanded="false">
-          <span class="envelope-number">02 🦋</span>
-          <span class="envelope-icon">💌</span>
-          <span class="envelope-title"> 🌷</span>
-          <span class="envelope-hint">Open me ♡</span>
-          <span class="envelope-flap"></span>
-          <span class="envelope-seal">♡</span>
-        </button>
-        <div class="memory-content" hidden>
-          <div class="photo-frame">
-            <span class="photo-flower flower-top-left">🌸</span>
-            <span class="photo-flower flower-top-right">🌷</span>
-            <span class="photo-flower flower-bottom-left">🌷</span>
-            <span class="photo-flower flower-bottom-right">🌸</span>
-            <img class="memory-photo" src="images/her-photo-2.jpg" alt="pretty girl 🌸">
-          </div>
-     
-          <button class="close-memory" type="button">Fold 💌</button>
+    <footer>made with a little creativity ♡</footer>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+        <button
+            class="lightbox-close"
+            id="lightboxClose"
+            type="button"
+            aria-label="Close"
+        >×</button>
+
+        <button
+            class="lightbox-arrow"
+            id="lightboxPrev"
+            type="button"
+            aria-label="Previous photo"
+        >‹</button>
+
+        <div class="lightbox-content">
+            <img id="lightboxImage" src="" alt="">
+            <p id="lightboxCounter">01 / 04</p>
         </div>
-      </article>
 
-      <article class="memory-card">
-        <button class="envelope" type="button" aria-expanded="false">
-          <span class="envelope-number">03 💗</span>
-          <span class="envelope-icon">💌</span>
-          <span class="envelope-title">🌸</span>
-          <span class="envelope-hint">Open me ♡</span>
-          <span class="envelope-flap"></span>
-          <span class="envelope-seal">♡</span>
-        </button>
-        <div class="memory-content" hidden>
-          <div class="photo-frame">
-            <span class="photo-flower flower-top-left">🌸</span>
-            <span class="photo-flower flower-top-right">🌷</span>
-            <span class="photo-flower flower-bottom-left">🌷</span>
-            <span class="photo-flower flower-bottom-right">🌸</span>
-            <img class="memory-photo" src="images/her-photo-3.jpg" alt="pretty girl 🌸">
-          </div>
-        
-          <button class="close-memory" type="button">Fold 💌</button>
-        </div>
-      </article>
-
-      <article class="memory-card">
-        <button class="envelope" type="button" aria-expanded="false">
-          <span class="envelope-number">04 💕</span>
-          <span class="envelope-icon">💌</span>
-          <span class="envelope-title">✨</span>
-          <span class="envelope-hint">Open me ♡</span>
-          <span class="envelope-flap"></span>
-          <span class="envelope-seal">♡</span>
-        </button>
-        <div class="memory-content" hidden>
-          <div class="photo-frame">
-            <span class="photo-flower flower-top-left">🌸</span>
-            <span class="photo-flower flower-top-right">🌷</span>
-            <span class="photo-flower flower-bottom-left">🌷</span>
-            <span class="photo-flower flower-bottom-right">🌸</span>
-            <img class="memory-photo" src="images/her-photo-4.jpg" >
-          </div>
-       
-          <button class="close-memory" type="button">Fold 💌</button>
-        </div>
-      </article>
-
-    </section>
-
-    <section class="final-section">
-      <p class="eyebrow">🌸 YOU MADE IT HERE 🌸</p>
-      <button id="finalNoteButton" class="final-button" type="button" aria-expanded="false">
-        One last little note 💗
-      </button>
-
-      <div id="finalNote" class="final-note" hidden>
-        <span class="final-heart">💖</span>
-        <h2>Just so you know... 🌷</h2>
-        <p>You are appreciated more than you might realise. I hope life gives you a thousand little reasons to smile. 🦋</p>
-        <span class="final-signature">with a little warmth, always ♡</span>
-      </div>
-
-      <a class="next-button" href="next.html">ya thechaaaa ✨ →</a>
-    </section>
-  </main>
-
-  <footer class="gallery-footer">made with care ♡ 🌸</footer>
+        <button
+            class="lightbox-arrow"
+            id="lightboxNext"
+            type="button"
+            aria-label="Next photo"
+        >›</button>
+    </div>
 
 </body>
 </html>
