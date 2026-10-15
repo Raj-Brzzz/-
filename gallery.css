@@ -1,10 +1,9 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap');
 
-/* =========================================
+/* =====================================
    SEGANII — DREAMY MEMORY GALLERY
-   Soft colors, responsive cards, subtle hearts
-   ========================================= */
+   ===================================== */
 
 :root {
   --pink: #e9a6c0;
@@ -37,12 +36,10 @@ body {
   min-height: 100vh;
   margin: 0;
   overflow-x: clip;
-
   background:
     radial-gradient(ellipse at 10% 10%, #f9e7f0 0, transparent 40%),
     radial-gradient(ellipse at 90% 40%, #f7e8f5 0, transparent 38%),
     #fffaf7;
-
   color: var(--ink);
   font-family: "DM Sans", sans-serif;
   -webkit-text-size-adjust: 100%;
@@ -80,7 +77,6 @@ textarea {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-
   background:
     radial-gradient(circle at 80% 20%, #f2c7dc33, transparent 28%),
     radial-gradient(circle at 15% 75%, #e9d1f033, transparent 30%);
@@ -123,7 +119,7 @@ textarea {
   text-align: right;
 }
 
-/* MAIN CONTENT */
+/* MAIN INTRO */
 
 .gallery-main {
   width: min(1000px, calc(100% - 36px));
@@ -168,7 +164,7 @@ textarea {
   line-height: 1.9;
 }
 
-/* LETTER PROGRESS */
+/* PROGRESS */
 
 .progress-area {
   width: 100%;
@@ -202,7 +198,7 @@ textarea {
   transition: width 0.5s ease;
 }
 
-/* MEMORY ENVELOPE GRID */
+/* ENVELOPE GRID */
 
 .memory-grid {
   display: grid;
@@ -220,9 +216,7 @@ textarea {
   background: #fffdfc;
   box-shadow: 0 9px 30px #89566b0b;
   animation: fade-up 0.7s ease both;
-  transition:
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .memory-card:nth-child(2) {
@@ -260,27 +254,14 @@ textarea {
   border-radius: 0;
   cursor: pointer;
   color: var(--ink);
-
   background:
     radial-gradient(circle at 20% 20%, #ffffffb5, transparent 35%),
     linear-gradient(145deg, #fff0f5, #f5dbe7);
-
-  transition:
-    background 0.35s ease,
-    transform 0.35s ease;
+  transition: background 0.35s ease, transform 0.35s ease;
 }
 
 .envelope:hover {
   background: linear-gradient(145deg, #fff6f9, #f0cddd);
-}
-
-.envelope:focus-visible,
-.close-memory:focus-visible,
-.final-button:focus-visible,
-.next-button:focus-visible,
-.back-link:focus-visible {
-  outline: 2px solid var(--pink-dark);
-  outline-offset: 4px;
 }
 
 .envelope-number {
@@ -342,9 +323,7 @@ textarea {
   background: #c77d9e;
   color: white;
   font-size: 14px;
-  transition:
-    opacity 0.25s ease,
-    transform 0.35s ease;
+  transition: opacity 0.25s ease, transform 0.35s ease;
 }
 
 .envelope:hover .envelope-icon {
@@ -399,13 +378,8 @@ textarea {
   padding: 27px;
   border: 1px solid #edc7d8;
   border-radius: 15px;
-
-  background:
-    radial-gradient(circle at 50% 50%, #fff 0, #fff9fc 75%);
-
-  box-shadow:
-    inset 0 0 0 5px #fff,
-    0 5px 18px #bd7e9916;
+  background: radial-gradient(circle at 50% 50%, #fff 0, #fff9fc 75%);
+  box-shadow: inset 0 0 0 5px #fff, 0 5px 18px #bd7e9916;
 }
 
 .photo-frame::before {
@@ -430,7 +404,7 @@ textarea {
   animation: photo-arrive 0.6s ease both;
 }
 
-/* DECORATIVE FLOWERS ON PHOTO CORNERS ONLY */
+/* FLOWERS ONLY ON PHOTO CORNERS */
 
 .photo-flower {
   position: absolute;
@@ -490,7 +464,7 @@ textarea {
   background: #f9e5ed;
 }
 
-/* FINAL NOTE SECTION */
+/* FINAL NOTE */
 
 .final-section {
   padding: 85px 0 55px;
@@ -508,9 +482,7 @@ textarea {
   color: #a85f81;
   font-size: 12px;
   cursor: pointer;
-  transition:
-    transform 0.25s ease,
-    background 0.25s ease;
+  transition: transform 0.25s ease, background 0.25s ease;
 }
 
 .final-button:hover,
@@ -573,7 +545,10 @@ textarea {
   letter-spacing: 1px;
 }
 
-/* SUBTLE FALLING HEARTS — NO FLOWER RAIN */
+/* =====================================
+   GENTLE FALLING HEARTS
+   Up to 10 hearts, slow and lightweight
+   ===================================== */
 
 .soft-falling-heart {
   position: fixed;
@@ -581,9 +556,9 @@ textarea {
   z-index: 2;
   pointer-events: none;
   user-select: none;
-  color: rgba(185, 104, 142, 0.42);
+  color: rgba(185, 104, 142, 0.58);
   font-family: Georgia, serif;
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 400;
   animation: softHeartFall linear forwards;
   will-change: transform, opacity;
@@ -596,20 +571,20 @@ textarea {
   }
 
   15% {
-    opacity: 0.45;
+    opacity: 0.62;
   }
 
   80% {
-    opacity: 0.28;
+    opacity: 0.42;
   }
 
   100% {
-    transform: translate3d(var(--drift), 110vh, 0) rotate(12deg);
+    transform: translate3d(var(--drift), 110vh, 0) rotate(18deg);
     opacity: 0;
   }
 }
 
-/* ANIMATIONS */
+/* GENERAL ANIMATIONS */
 
 @keyframes flower-sway {
   from {
@@ -657,7 +632,7 @@ textarea {
   }
 }
 
-/* MOBILE LAYOUT */
+/* MOBILE RESPONSIVENESS */
 
 @media (max-width: 650px) {
   .gallery-header {

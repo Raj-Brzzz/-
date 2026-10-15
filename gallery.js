@@ -1,17 +1,24 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-  // MEMORY ENVELOPES
+  // =====================================
+  // 1. MEMORY ENVELOPES AND PROGRESS BAR
+  // =====================================
+
   const cards = document.querySelectorAll(".memory-card");
   const progressText = document.getElementById("progressText");
   const progressBar = document.getElementById("progressBar");
   const progressTrack = document.getElementById("progressTrack");
 
   function updateProgress() {
-    const opened = document.querySelectorAll(".memory-card.is-open").length;
+    const opened = document.querySelectorAll(
+      ".memory-card.is-open"
+    ).length;
+
     const total = cards.length;
 
     if (progressText) {
-      progressText.textContent = `${opened} of ${total} letters opened 💌`;
+      progressText.textContent =
+        `${opened} of ${total} letters opened 💌`;
     }
 
     if (progressBar) {
@@ -57,7 +64,10 @@ document.addEventListener("DOMContentLoaded", () => {
     closeButton?.addEventListener("click", closeMemory);
   });
 
-  // FINAL LITTLE NOTE
+  // =====================================
+  // 2. FINAL LITTLE NOTE
+  // =====================================
+
   const finalButton = document.getElementById("finalNoteButton");
   const finalNote = document.getElementById("finalNote");
 
@@ -68,7 +78,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const opening = finalNote.hidden;
 
       finalNote.hidden = !opening;
-      finalButton.setAttribute("aria-expanded", String(opening));
+
+      finalButton.setAttribute(
+        "aria-expanded",
+        String(opening)
+      );
 
       finalButton.textContent = opening
         ? "Close my little note ♡"
@@ -83,44 +97,60 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // SOFT, MINIMAL FALLING HEARTS ONLY
-  const reducedMotion =
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // =====================================
+  // 3. SOFT FALLING HEARTS
+  // =====================================
 
-  const MAX_HEARTS = 5;
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  const MAX_HEARTS = 10;
+  const HEART_INTERVAL = 1800;
 
   function makeHeart() {
     if (document.hidden || reducedMotion) return;
 
-    if (document.querySelectorAll(".soft-falling-heart").length >= MAX_HEARTS) {
+    if (
+      document.querySelectorAll(".soft-falling-heart").length >=
+      MAX_HEARTS
+    ) {
       return;
     }
 
     const heart = document.createElement("span");
-    heart.className = "soft-falling-heart";
-    heart.setAttribute("aria-hidden", "true");
-    heart.textContent = "♡";
 
-    heart.style.left = `${Math.random() * 96 + 2}vw`;
+    heart.className = "soft-falling-heart";
+    heart.textContent = "♡";
+    heart.setAttribute("aria-hidden", "true");
+
+    heart.style.left = `${Math.random() * 94 + 3}vw`;
+
     heart.style.setProperty(
       "--drift",
-      `${Math.random() * 50 - 25}px`
+      `${Math.random() * 100 - 50}px`
     );
 
+    heart.style.fontSize =
+      `${14 + Math.random() * 10}px`;
+
     heart.style.animationDuration =
-      `${9 + Math.random() * 4}s`;
+      `${7 + Math.random() * 5}s`;
 
     document.body.appendChild(heart);
 
-    heart.addEventListener("animationend", () => {
-      heart.remove();
-    }, { once: true });
+    heart.addEventListener(
+      "animationend",
+      () => heart.remove(),
+      { once: true }
+    );
   }
 
   if (!reducedMotion) {
     makeHeart();
-    window.setInterval(makeHeart, 3500);
+    window.setInterval(makeHeart, HEART_INTERVAL);
   }
 
+  // Initialize progress
   updateProgress();
 });
