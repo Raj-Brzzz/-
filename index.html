@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fff5fb" />
+  <title>A Little Note for You ♡</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="sky-glow glow-one"></div>
+  <div class="sky-glow glow-two"></div>
+  <div class="petals" id="petals" aria-hidden="true"></div>
+
+  <main class="page">
+    <div class="tiny-label"><span class="sparkle">✦</span> A LITTLE SOMETHING FOR YOU <span class="sparkle">✦</span></div>
+
+    <section class="intro" id="intro">
+      <div class="heart-orbit" aria-hidden="true">
+        <span class="orbit-heart heart-a">♡</span>
+        <span class="orbit-heart heart-b">♥</span>
+        <span class="orbit-heart heart-c">✧</span>
+        <div class="main-heart">♡</div>
+      </div>
+      <p class="eyebrow">made with a little courage</p>
+      <h1>Hey, <span>you.</span></h1>
+      <p class="subtitle">I wanted to remind you of something<br class="desktop-break" /> you might not hear enough.</p>
+      <button class="primary-button" id="openNote">A little note for you <span>↗</span></button>
+      <p class="hint">no pressure, just a little kindness ♡</p>
+    </section>
+
+    <section class="letter-wrap hidden" id="letterWrap" aria-live="polite">
+      <article class="letter">
+        <div class="letter-top"><span>just for you</span><span class="letter-flower">✿</span></div>
+        <div class="letter-rule"></div>
+        <p class="letter-greeting">Hi you,</p>
+        <p class="letter-copy" id="typedMessage"></p><span class="cursor" id="cursor">|</span>
+        <p class="letter-signoff hidden" id="signoff">Take care of that lovely heart of yours. <span>♡</span></p>
+        <div class="letter-footer"><span>with a little warmth,</span><span class="signature">someone who appreciates you</span></div>
+      </article>
+      <button class="text-button" id="surpriseButton">psst… there's one more thing <span>♡</span></button>
+      <div class="surprise hidden" id="surprise" aria-live="polite">
+        <span class="surprise-star">✧</span>
+        <p class="surprise-title">Your tiny reminder</p>
+        <p>You make the world a little softer just by being in it.</p>
+        <span class="surprise-bottom">and that's pretty special ♡</span>
+      </div>
+      <button class="restart-button" id="restartButton">read it again ↺</button>
+    </section>
+
+    <footer>small note, sincere feelings <span>♡</span></footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
