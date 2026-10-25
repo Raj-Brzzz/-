@@ -7,377 +7,48 @@
 <title>Flower</title>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
 <style>
-  :root{--fg:#f4efe6}
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{width:100%;height:100%;background:#000;overflow:hidden;color:var(--fg);-webkit-tap-highlight-color:transparent}
-  #c{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;display:block;background:#000}
-  #hd{position:fixed;right:5vw;top:4vh;display:none;flex-direction:column;align-items:center;gap:8px;
-      font:500 clamp(11px,2.6vw,16px) 'Oswald',sans-serif;text-transform:uppercase;color:#fff;opacity:0;pointer-events:none}
-  #hd svg{width:clamp(36px,8vw,64px);height:auto}
-  #hint{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 14px);text-align:center;font:12px system-ui,sans-serif;color:#777;opacity:.0;transition:opacity .4s}
-  .back-link{position:fixed;top:calc(env(safe-area-inset-top) + 14px);left:16px;z-index:5;color:#ffd9e8;opacity:.75;text-decoration:none;
-       font:500 12px 'Oswald',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;text-shadow:0 0 10px rgba(255,140,190,.5);transition:opacity .2s}
-  .back-link:hover{opacity:1}
+:root{--fg:#f4efe6}*{box-sizing:border-box;margin:0;padding:0}html,body{width:100%;height:100%;background:#000;overflow:hidden;color:var(--fg);-webkit-tap-highlight-color:transparent}#c{position:fixed;inset:0;width:100vw;height:100dvh;display:block;background:#000}.back-link{position:fixed;top:calc(env(safe-area-inset-top) + 14px);left:16px;z-index:5;color:#ffd9e8;opacity:.75;text-decoration:none;font:500 12px 'Oswald',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;text-shadow:0 0 10px rgba(255,140,190,.35)}.back-link:hover{opacity:1}#hd{position:fixed;right:5vw;top:4vh;display:none;flex-direction:column;align-items:center;gap:8px;font:500 clamp(11px,2.6vw,16px) 'Oswald',sans-serif;text-transform:uppercase;color:#fff;opacity:0;pointer-events:none}#hd svg{width:clamp(36px,8vw,64px);height:auto}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-
 <a class="back-link" href="./gallery.html" aria-label="Back to gallery">&#8592; Back to gallery</a>
-
-<div id="hd">
-  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-    <defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#fd5"/><stop offset=".35" stop-color="#ff543e"/><stop offset=".7" stop-color="#c837ab"/><stop offset="1" stop-color="#7a3cf0"/></linearGradient></defs>
-    <g id="igs" stroke="url(#g)"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r="1.1" fill="#fff" stroke="none"/></g>
-  </svg>
-  <span id="hdt"></span>
-</div>
-
+<div id="hd"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#fd5"/><stop offset=".35" stop-color="#ff543e"/><stop offset=".7" stop-color="#c837ab"/><stop offset="1" stop-color="#7a3cf0"/></linearGradient></defs><g stroke="url(#g)"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r="1.1" fill="#fff" stroke="none"/></g></svg><span id="hdt"></span></div>
 <script>
-/* =====================================================================
-   CONFIG
-   ===================================================================== */
-const HANDLE = '';        // e.g. '@yourname'  ('' = no handle / end card)
-const LOOP   = true;      // restart from the eye after the bouquet
-let   FPS    = 60;        // target rate; auto-drops to 30 if the device can't keep up
-
-/* ---- timeline (seconds) ---- */
-const T_EYE_ZOOMOUT_START = 1.5;   // iris close-up -> full eye
-const T_EYE_HOLD          = 4.0;   // eye looks around & blinks
-const T_ZOOM_IN           = 9.8;   // zoom INTO the pupil
-const T_LILY              = 10.9;  // bouquet starts growing INSIDE the pupil while it is still zooming
-const T_ZOOM_END          = 15.0;  // pupil fills the whole screen
-const LILY_GROW           = 10.5;
-const T_FADE_OUT          = 28.5;
-const T_TOTAL             = 31.0;
-
-/* ---- ascii ---- */
-const RAMP = " .'`,:;-~+/|trxjfCLU0O#@";
-const RAMP_L = " .-~=+*xX%#@";   // horizontal-biased glyphs for the bouquet
-const CH_RATIO = 1.4;     // character cell height / width
-
-/* =====================================================================
-   helpers
-   ===================================================================== */
-const TAU=Math.PI*2, clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
-const lerp=(a,b,t)=>a+(b-a)*t, ease=t=>t*t*(3-2*t);
-const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+'use strict';
+/* Smooth, responsive ASCII eye-to-lily animation. No libraries required. */
+const HANDLE='';
+const LOOP=true;
+const TOTAL=31;
+const T_EYE_ZOOMOUT_START=1.5,T_EYE_HOLD=4,T_ZOOM_IN=9.8,T_LILY=10.9,T_ZOOM_END=15,T_LILY_GROW=10.5,T_FADE_OUT=28.5;
+const RAMP=" .'`,:;-~+/|trxjfCLU0O#@", RAMP_L=" .-~=+*xX%#@", CH_RATIO=1.4;
+const TAU=Math.PI*2,clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),lerp=(a,b,t)=>a+(b-a)*t,ease=t=>t*t*(3-2*t),easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 function rng(seed){return()=>((seed=Math.imul(seed^seed>>>15,seed|1),seed^=seed+Math.imul(seed^seed>>>7,seed|61),((seed^seed>>>14)>>>0)/4294967296))}
-
-/* =====================================================================
-   canvases / layout  (fully responsive)
-   ===================================================================== */
-const out=document.getElementById('c'), octx=out.getContext('2d');
-const SRC=document.createElement('canvas'), sctx=SRC.getContext('2d',{willReadFrequently:true});
-const hd=document.getElementById('hd');
-let cols,rows,cellW,cellH,Vw,Vh,U,dpr,vw,vh,lilyF,lilyY;
-
-function layout(){
-  vw=innerWidth; vh=innerHeight; dpr=Math.min(devicePixelRatio||1,2);
-  const target=clamp(vw/125,3.2,4.2);                 // px per character column
-  cols=Math.round(vw/target); cellW=vw/cols;
-  cellH=cellW*CH_RATIO; rows=Math.ceil(vh/cellH);
-  SRC.width=cols; SRC.height=rows;
-  Vw=cols; Vh=rows*CH_RATIO;                      // virtual square-pixel space
-  U=Math.min(Vw,Vh*1.1);                          // eye scale unit
-  lilyF=Math.min(Vw*.92/100,Vh*.7/142);          // bouquet scale
-  lilyY=Vh*.9-142*lilyF;                          // bouquet base alignment
-  out.width=Math.round(vw*dpr); out.height=Math.round(rows*cellH*dpr);
-  out.style.height=(rows*cellH)+'px';
-  hd.style.display=HANDLE?'flex':'none';
-  document.getElementById('hdt').textContent=HANDLE;
-}
-addEventListener('resize',layout);
-addEventListener('orientationchange',()=>setTimeout(layout,200));
-
-/* =====================================================================
-   SCENE A — EYE
-   ===================================================================== */
-let lastZoom=1, clipR2=Infinity;
-function drawEye(c,t){
-  // state
-  let zoom=1, open=1, look=0;
-  if(t<T_EYE_ZOOMOUT_START){ zoom=3.4 }
-  else if(t<T_EYE_HOLD){ zoom=lerp(3.4,1,easeIO((t-T_EYE_ZOOMOUT_START)/(T_EYE_HOLD-T_EYE_ZOOMOUT_START))) }
-  else if(t<T_ZOOM_IN){
-    look=Math.sin(t*1.3)*.05*(1-ease(clamp((t-(T_ZOOM_IN-1.2))/1.2)));
-    const bt=(t-T_EYE_HOLD)%3.0; if(bt>2.7) open=1-Math.sin((bt-2.7)/.3*Math.PI)*.8;
-  } else {
-    const k=clamp((t-T_ZOOM_IN)/(T_ZOOM_END-T_ZOOM_IN));
-    zoom=Math.exp(lerp(0,Math.log(55),easeIO(k)));   // exponential = smooth, constant-feeling dive
-    look=0; lastZoom=zoom;
-  }
-  const cx=Vw/2, cy=Vh/2;
-  c.fillStyle='#050302'; c.fillRect(0,0,Vw,Vh);
-  c.save(); c.translate(cx,cy); c.scale(zoom,zoom); c.translate(-cx,-cy);
-
-  // skin
-  const sg=c.createRadialGradient(cx,cy,U*.05,cx,cy,U*.75);
-  sg.addColorStop(0,'#8a5c3c'); sg.addColorStop(.6,'#5a3a24'); sg.addColorStop(1,'#120a06');
-  c.fillStyle=sg; c.fillRect(cx-Vw*2,cy-Vh*2,Vw*4,Vh*4);
-
-  // eye geometry
-  const ew=U*.46, eh=ew*.5*open, ex=cx, ey=cy;
-  const lidTop=()=>{c.moveTo(ex-ew,ey);c.bezierCurveTo(ex-ew*.5,ey-eh*1.3,ex+ew*.5,ey-eh*1.3,ex+ew,ey)};
-  c.save(); c.beginPath(); lidTop();
-  c.bezierCurveTo(ex+ew*.5,ey+eh*.9,ex-ew*.5,ey+eh*.9,ex-ew,ey); c.closePath(); c.clip();
-  c.fillStyle='#ebe6de'; c.fillRect(ex-ew,ey-ew,ew*2,ew*2);
-  const sh=c.createRadialGradient(ex,ey,ew*.2,ex,ey,ew*1.1);
-  sh.addColorStop(0,'rgba(0,0,0,0)'); sh.addColorStop(1,'rgba(60,30,20,.55)');
-  c.fillStyle=sh; c.fillRect(ex-ew,ey-ew,ew*2,ew*2);
-  // iris
-  const ix=ex+look*ew*2, iy=ey, ir=ew*.37;
-  const ig=c.createRadialGradient(ix,iy,ir*.2,ix,iy,ir);
-  ig.addColorStop(0,'#7a4a1c'); ig.addColorStop(.6,'#b27a3a'); ig.addColorStop(.9,'#4a2c12'); ig.addColorStop(1,'#1c0f06');
-  c.fillStyle=ig; c.beginPath(); c.arc(ix,iy,ir,0,TAU); c.fill();
-  c.strokeStyle='rgba(255,210,140,.35)'; c.lineWidth=ew*.012;
-  for(let i=0;i<80;i++){const a=i/80*TAU;c.beginPath();c.moveTo(ix+Math.cos(a)*ir*.38,iy+Math.sin(a)*ir*.38);c.lineTo(ix+Math.cos(a)*ir*.95,iy+Math.sin(a)*ir*.95);c.stroke()}
-  // pupil
-  c.fillStyle='#000'; c.beginPath(); c.arc(ix,iy,ir*.36,0,TAU); c.fill();
-  // highlight
-  c.fillStyle='rgba(255,255,255,.75)'; c.beginPath(); c.arc(ix-ir*.4,iy-ir*.42,ir*.1,0,TAU); c.fill();
-  c.restore();
-  // lash line
-  c.strokeStyle='rgba(15,8,4,.9)'; c.lineWidth=ew*.035; c.beginPath(); lidTop(); c.stroke();
-  c.restore();
-
-  // fade in from black at the very start
-  if(t<.8){c.fillStyle=`rgba(0,0,0,${1-ease(t/.8)})`;c.fillRect(0,0,Vw,Vh)}
-}
-
-/* =====================================================================
-   SCENE B — LILY BOUQUET  (vector lilies, layout traced from reference)
-   virtual box: 100 x 142
-   ===================================================================== */
-const BASE=[46,141];
-const PAL={
-  red:   ['#8c0e18','#f2262f','#ff6e55'],
-  cream: ['#b8702f','#f3e6d2','#ffffff'],
-  peach: ['#c0693a','#eab38c','#fcebdc'],
-  yellow:['#b87a0c','#f8ca2a','#fff47e'],
-  pink:  ['#7a2080','#e65acb','#ffc6f6'],
-  wine:  ['#5a0f28','#bc3c6c','#f094b8'],
-  dark:  ['#4a0810','#a41a24','#e04e54'],
-};
-// x,y,radius,palette,rotation,tilt,delay(0-1), order = drawing order (back -> front)
-const FL=[
-  {x:38,y:5,  r:13,p:'cream',rot:.3,tilt:.8,d:.12,nb:1,bend:-6},
-  {x:66,y:3,  r:13,p:'wine', rot:.9,tilt:.8,d:.20,nb:1,bend:6},
-  {x:26,y:23,r:19,p:'cream', rot:.4, tilt:.8, d:.10},
-  {x:51,y:9.5,r:15,p:'peach',rot:1.1,tilt:.7, d:.22},
-  {x:76,y:22,r:17,p:'yellow',rot:.2,tilt:.8, d:.18},
-  {x:86,y:50,r:19,p:'wine',  rot:.9,tilt:.85,d:.30},
-  {x:13.5,y:51,r:16,p:'yellow',rot:.7,tilt:.85,d:.26},
-  {x:84,y:104,r:16,p:'dark', rot:.3,tilt:.8, d:.36},
-  {x:13.5,y:100,r:15,p:'yellow',rot:1.0,tilt:.8,d:.34},
-  {x:50,y:36,r:30,p:'red',   rot:.15,tilt:.9, d:.00},
-  {x:35,y:71.5,r:26,p:'pink',rot:.5,tilt:.9, d:.08},
-  {x:73,y:74,r:26,p:'cream', rot:.05,tilt:.85,d:.14},
-  {x:49,y:101,r:24,p:'peach',rot:.8,tilt:.85,d:.20},
-];
-const rr0=rng(5);
-FL.forEach((f,i)=>{f.j=Array.from({length:6},()=>(rr0()-.5)*.22);f.bend=f.bend!==undefined?f.bend:(rr0()-.5)*10;f.sp=Array.from({length:26},()=>[rr0(),rr0(),rr0()])});
-// leaves: [angle(rad, 0=right, -PI/2=up), length, width]
-const LEAVES=[];
-(function(){const r=rng(21);
-  for(let i=0;i<22;i++){const a=-Math.PI+.15+(i/21)*(Math.PI-.3);
-    LEAVES.push({ox:BASE[0]+(r()-.5)*14,oy:BASE[1]-r()*8,a:a+(r()-.5)*.25,l:20+r()*28,w:3.6+r()*3,front:i%4===0,dl:r()*.25});}
-})();
-
-const lerpAng=(a,b,k)=>{const d=((b-a+3*Math.PI)%TAU)-Math.PI;return a+d*k};
-// direction each flower's stem is travelling at its tip -> axis of the closed bud
-FL.forEach(f=>{const mx=(BASE[0]+f.x)/2+f.bend,my=(BASE[1]+f.y)/2;f.ax=Math.atan2(f.y-my,f.x-mx);f.mx=mx;f.my=my});
-// small leaves along each stem
-const SL=[];(function(){const r=rng(77);FL.forEach((f,k)=>{for(let j=0;j<3;j++)SL.push({f,u:.28+j*.2+r()*.06,side:(j+k)%2?1:-1,l:8+r()*7,w:2+r()*1.2})})})();
+const out=document.getElementById('c'),octx=out.getContext('2d',{alpha:false});
+const src=document.createElement('canvas'),sctx=src.getContext('2d',{willReadFrequently:true});
+const hd=document.getElementById('hd');let cols,rows,cellW,cellH,Vw,Vh,U,dpr,vw,vh,lilyF,lilyY,lastZoom=1,clipR2=Infinity;
+function layout(){vw=innerWidth;vh=innerHeight;dpr=Math.min(devicePixelRatio||1,2);const target=clamp(vw/125,3.2,4.2);cols=Math.max(1,Math.round(vw/target));cellW=vw/cols;cellH=cellW*CH_RATIO;rows=Math.ceil(vh/cellH);src.width=cols;src.height=rows;Vw=cols;Vh=rows*CH_RATIO;U=Math.min(Vw,Vh*1.1);lilyF=Math.min(Vw*.92/100,Vh*.7/142);lilyY=Vh*.9-142*lilyF;out.width=Math.round(vw*dpr);out.height=Math.round(vh*dpr);out.style.width=vw+'px';out.style.height=vh+'px';octx.setTransform(dpr,0,0,dpr,0,0);hd.style.display=HANDLE?'flex':'none';document.getElementById('hdt').textContent=HANDLE;}
+addEventListener('resize',layout);addEventListener('orientationchange',()=>setTimeout(layout,200));
+function drawEye(c,t){let zoom=1,open=1,look=0;if(t<T_EYE_ZOOMOUT_START)zoom=3.4;else if(t<T_EYE_HOLD)zoom=lerp(3.4,1,easeIO((t-T_EYE_ZOOMOUT_START)/(T_EYE_HOLD-T_EYE_ZOOMOUT_START)));else if(t<T_ZOOM_IN){look=Math.sin(t*1.3)*.05*(1-ease(clamp((t-(T_ZOOM_IN-1.2))/1.2)));const bt=(t-T_EYE_HOLD)%3;if(bt>2.7)open=1-Math.sin((bt-2.7)/.3*Math.PI)*.8}else{const k=clamp((t-T_ZOOM_IN)/(T_ZOOM_END-T_ZOOM_IN));zoom=Math.exp(lerp(0,Math.log(55),easeIO(k)));lastZoom=zoom;}
+const cx=Vw/2,cy=Vh/2;c.fillStyle='#050302';c.fillRect(0,0,Vw,Vh);c.save();c.translate(cx,cy);c.scale(zoom,zoom);c.translate(-cx,-cy);
+const sg=c.createRadialGradient(cx,cy,U*.05,cx,cy,U*.75);sg.addColorStop(0,'#795037');sg.addColorStop(.6,'#4c3020');sg.addColorStop(1,'#100805');c.fillStyle=sg;c.fillRect(cx-Vw*2,cy-Vh*2,Vw*4,Vh*4);
+const ew=U*.46,eh=ew*.5*open,ex=cx,ey=cy,lidTop=()=>{c.moveTo(ex-ew,ey);c.bezierCurveTo(ex-ew*.5,ey-eh*1.3,ex+ew*.5,ey-eh*1.3,ex+ew,ey)};
+c.save();c.beginPath();lidTop();c.bezierCurveTo(ex+ew*.5,ey+eh*.9,ex-ew*.5,ey+eh*.9,ex-ew,ey);c.closePath();c.clip();c.fillStyle='#d6d0c7';c.fillRect(ex-ew,ey-ew,ew*2,ew*2);const sh=c.createRadialGradient(ex,ey,ew*.2,ex,ey,ew*1.1);sh.addColorStop(0,'rgba(0,0,0,0)');sh.addColorStop(1,'rgba(35,18,12,.62)');c.fillStyle=sh;c.fillRect(ex-ew,ey-ew,ew*2,ew*2);
+const ix=ex+look*ew*2,iy=ey,ir=ew*.37,ig=c.createRadialGradient(ix,iy,ir*.2,ix,iy,ir);ig.addColorStop(0,'#603b1c');ig.addColorStop(.6,'#986735');ig.addColorStop(.9,'#3b2513');ig.addColorStop(1,'#170d06');c.fillStyle=ig;c.beginPath();c.arc(ix,iy,ir,0,TAU);c.fill();c.strokeStyle='rgba(255,200,130,.28)';c.lineWidth=ew*.012;for(let i=0;i<80;i++){const a=i/80*TAU;c.beginPath();c.moveTo(ix+Math.cos(a)*ir*.38,iy+Math.sin(a)*ir*.38);c.lineTo(ix+Math.cos(a)*ir*.95,iy+Math.sin(a)*ir*.95);c.stroke()}c.fillStyle='#000';c.beginPath();c.arc(ix,iy,ir*.36,0,TAU);c.fill();c.fillStyle='rgba(255,255,255,.65)';c.beginPath();c.arc(ix-ir*.4,iy-ir*.42,ir*.1,0,TAU);c.fill();c.restore();c.strokeStyle='rgba(12,6,3,.95)';c.lineWidth=ew*.035;c.beginPath();lidTop();c.stroke();c.restore();if(t<.8){c.fillStyle=`rgba(0,0,0,${1-ease(t/.8)})`;c.fillRect(0,0,Vw,Vh)}}
+const BASE=[46,141],PAL={red:['#750d17','#d91e2a','#ed574b'],cream:['#98602c','#d7cbb9','#eee5d8'],peach:['#a45b35','#d39b79','#ebd7c8'],yellow:['#94620b','#d9ad25','#e8d96b'],pink:['#651d70','#cb50b3','#e8a9dc'],wine:['#4c1026','#a3335e','#d77e9f'],dark:['#3d080e','#8d1b23','#c8474c']};
+const FL=[{x:38,y:5,r:13,p:'cream',rot:.3,tilt:.8,d:.12,nb:1,bend:-6},{x:66,y:3,r:13,p:'wine',rot:.9,tilt:.8,d:.20,nb:1,bend:6},{x:26,y:23,r:19,p:'cream',rot:.4,tilt:.8,d:.10},{x:51,y:9.5,r:15,p:'peach',rot:1.1,tilt:.7,d:.22},{x:76,y:22,r:17,p:'yellow',rot:.2,tilt:.8,d:.18},{x:86,y:50,r:19,p:'wine',rot:.9,tilt:.85,d:.30},{x:13.5,y:51,r:16,p:'yellow',rot:.7,tilt:.85,d:.26},{x:84,y:104,r:16,p:'dark',rot:.3,tilt:.8,d:.36},{x:13.5,y:100,r:15,p:'yellow',rot:1,tilt:.8,d:.34},{x:50,y:36,r:30,p:'red',rot:.15,tilt:.9,d:0},{x:35,y:71.5,r:26,p:'pink',rot:.5,tilt:.9,d:.08},{x:73,y:74,r:26,p:'cream',rot:.05,tilt:.85,d:.14},{x:49,y:101,r:24,p:'peach',rot:.8,tilt:.85,d:.20}];
+const rr=rng(5);FL.forEach(f=>{f.j=Array.from({length:6},()=> (rr()-.5)*.22);f.bend=f.bend??(rr()-.5)*10;f.sp=Array.from({length:26},()=>[rr(),rr(),rr()]);});
+const LEAVES=[];(function(){const r=rng(21);for(let i=0;i<22;i++){const a=-Math.PI+.15+i/21*(Math.PI-.3);LEAVES.push({ox:BASE[0]+(r()-.5)*14,oy:BASE[1]-r()*8,a:a+(r()-.5)*.25,l:20+r()*28,w:3.6+r()*3,front:i%4===0,dl:r()*.25})}})();
+const lerpAng=(a,b,k)=>{const d=((b-a+3*Math.PI)%TAU)-Math.PI;return a+d*k};FL.forEach(f=>{const mx=(BASE[0]+f.x)/2+f.bend,my=(BASE[1]+f.y)/2;f.ax=Math.atan2(f.y-my,f.x-mx);f.mx=mx;f.my=my});const SL=[];(function(){const r=rng(77);FL.forEach((f,k)=>{for(let j=0;j<3;j++)SL.push({f,u:.28+j*.2+r()*.06,side:(j+k)%2?1:-1,l:8+r()*7,w:2+r()*1.2})})})();
 function stemPt(f,u){const v=1-u;return[v*v*BASE[0]+2*v*u*f.mx+u*u*f.x,v*v*BASE[1]+2*v*u*f.my+u*u*f.y,Math.atan2(2*v*(f.my-BASE[1])+2*u*(f.y-f.my),2*v*(f.mx-BASE[0])+2*u*(f.x-f.mx))]}
-
-function petalPath(c,len,w,curl,wave){
-  c.beginPath();c.moveTo(0,0);
-  c.bezierCurveTo(len*.2,-w*1.1,len*.5,-w*(1.06+wave),len*.8,-w*.5);
-  c.quadraticCurveTo(len*.94,-w*.16,len,curl);
-  c.quadraticCurveTo(len*.94,w*.2,len*.8,w*.5);
-  c.bezierCurveTo(len*.5,w*(1.06-wave),len*.2,w*1.1,0,0);c.closePath();
-}
-function drawPetal(c,ang,len,w,pal,curl,wave,seed,bud){
-  c.save();c.rotate(ang);
-  const g=c.createLinearGradient(0,0,len,0);
-  g.addColorStop(0,pal[0]);g.addColorStop(.2,pal[0]);g.addColorStop(.5,pal[1]);g.addColorStop(1,pal[2]);
-  petalPath(c,len,w,curl,wave);c.fillStyle=g;c.fill();
-  c.save();petalPath(c,len,w,curl,wave);c.clip();
-  const h=c.createLinearGradient(0,-w,0,w);
-  h.addColorStop(0,'rgba(255,255,255,.28)');h.addColorStop(.4,'rgba(255,255,255,.05)');h.addColorStop(.6,'rgba(0,0,0,.05)');h.addColorStop(1,'rgba(0,0,0,.24)');
-  c.fillStyle=h;c.fillRect(0,-w*1.3,len,w*2.6);
-  const m=c.createLinearGradient(0,-w*.3,0,w*.3);
-  m.addColorStop(0,'rgba(255,255,255,0)');m.addColorStop(.5,'rgba(255,255,255,.26)');m.addColorStop(1,'rgba(255,255,255,0)');
-  c.fillStyle=m;c.fillRect(len*.05,-w*.3,len*.85,w*.6);
-  c.strokeStyle='rgba(0,0,0,.12)';c.lineWidth=.35;
-  for(let k=-2;k<=2;k++){if(!k)continue;c.beginPath();c.moveTo(len*.08,k*w*.05);c.quadraticCurveTo(len*.5,k*w*.42,len*.9,k*w*.12+curl*.6);c.stroke()}
-  c.fillStyle=pal[0];c.globalAlpha=.7;
-  for(let k=0;k<9;k++){const u=.1+k*.045+((seed*7+k*13)%5)*.006,v=(((seed*3+k*17)%7)-3)*w*.07;
-    c.beginPath();c.arc(len*u,v,.55+((k+seed)%3)*.12,0,TAU);c.fill()}
-  c.globalAlpha=1;
-  if(bud>0){c.fillStyle=`rgba(20,8,10,${bud*.38})`;c.fillRect(0,-w*1.3,len,w*2.6)}   // closed buds sit in shade
-  c.restore();
-  petalPath(c,len,w,curl,wave);c.strokeStyle='rgba(0,0,0,.5)';c.lineWidth=.7;c.stroke();
-  c.strokeStyle='rgba(255,255,255,.3)';c.lineWidth=.35;c.beginPath();
-  c.moveTo(len*.1,-w*.55);c.bezierCurveTo(len*.3,-w*1.0,len*.55,-w*.98,len*.78,-w*.46);c.stroke();
-  c.strokeStyle='rgba(0,0,0,.25)';c.lineWidth=.45;c.beginPath();c.moveTo(len*.06,0);c.lineTo(len*.9,curl*.8);c.stroke();
-  c.restore();
-}
-/* bg = bud size (0..1), bloom = how far the bud has opened (0..1) */
-function drawFlower(c,f,bg,bloom,t){
-  const pal=PAL[f.p],R=f.r*1.2,sz=ease(clamp(bg)),open=ease(clamp(bloom));
-  c.save();c.translate(f.x+Math.sin(t*.6+f.x)*.25*open,f.y);
-  c.scale(1,lerp(1,f.tilt,open));
-  // soft contact shadow so overlapping flowers read as layers
-  if(open>0){const sh=c.createRadialGradient(0,0,R*.2,0,0,R*1.05);sh.addColorStop(0,'rgba(0,0,0,0)');sh.addColorStop(1,'rgba(0,0,0,.2)');
-    c.fillStyle=sh;c.beginPath();c.arc(0,0,R*1.05*ease(clamp(bloom*1.5)),0,TAU);c.fill()}
-  // green calyx cradling the cocoon
-  if(open<.95){c.save();c.rotate(f.ax+Math.PI);c.globalAlpha=1-open;
-    c.fillStyle='#4a9a3c';c.beginPath();c.ellipse(R*.06,0,R*.16*sz,R*.08*sz,0,0,TAU);c.fill();c.restore()}
-  // petals: closed spindle (the "cocoon") that peels open one petal at a time
-  for(let pass=0;pass<2;pass++)for(let i=pass;i<6;i+=2){
-    const po=ease(clamp((bloom-(pass?.16:0)-(i>>1)*.06)/.58));
-    const closedAng=f.ax+(i-2.5)*.05;
-    const finalAng=i*Math.PI/3+f.j[i]+f.rot+Math.sin(t*.4+f.y)*.02;
-    const ang=lerpAng(closedAng,finalAng,po);
-    const len=R*(pass?.92:1)*sz*lerp(.8,1,po);
-    const w=R*lerp(.17,pass?.27:.31,po)*(.55+.45*sz);
-    const curl=(pass?-1:1)*R*.07*po, wave=f.j[i]*.6*po;
-    drawPetal(c,ang,len,w,pal,curl,wave,i+Math.floor(f.x),(1-po)*sz);
-  }
-  const o2=ease(clamp((bloom-.25)/.75));
-  if(o2>0){
-    const tg=c.createRadialGradient(0,0,0,0,0,R*.2);
-    tg.addColorStop(0,'rgba(190,205,90,.9)');tg.addColorStop(.5,pal[0]);tg.addColorStop(1,'rgba(0,0,0,0)');
-    c.fillStyle=tg;c.beginPath();c.arc(0,0,R*.2*o2,0,TAU);c.fill();
-    c.fillStyle='rgba(55,6,10,.8)';
-    f.sp.forEach(s=>{const k=Math.floor(s[0]*6),a=k*Math.PI/3+f.j[k]+f.rot+(s[1]-.5)*.4,d=R*(.16+s[2]*.36)*o2;
-      c.beginPath();c.arc(Math.cos(a)*d,Math.sin(a)*d,.45+s[1]*.4,0,TAU);c.fill()});
-    for(let i=0;i<6;i++){
-      const a=i*Math.PI/3+.5+f.j[i]+f.rot,L=R*(.36+(i%3)*.09)*o2,x=Math.cos(a)*L,y=Math.sin(a)*L;
-      c.strokeStyle='rgba(245,238,200,.95)';c.lineWidth=.5;c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(x*.5,y*.5-1.2,x,y);c.stroke();
-      c.save();c.translate(x,y);c.rotate(a+.3);
-      c.fillStyle='#b8480e';c.beginPath();c.ellipse(0,0,R*.1,R*.035,0,0,TAU);c.fill();
-      c.fillStyle='rgba(255,190,100,.8)';c.beginPath();c.ellipse(-R*.02,-R*.01,R*.05,R*.012,0,0,TAU);c.fill();c.restore();
-    }
-    const pa=-.9+f.j[0]+f.rot,pl=R*.55*o2;
-    c.strokeStyle='rgba(235,245,195,.95)';c.lineWidth=.55;c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(Math.cos(pa)*pl*.5,Math.sin(pa)*pl*.5-1,Math.cos(pa)*pl,Math.sin(pa)*pl);c.stroke();
-    c.fillStyle='#d4e070';c.beginPath();c.arc(Math.cos(pa)*pl,Math.sin(pa)*pl,.9*o2,0,TAU);c.fill();
-  }
-  c.restore();
-}
-function leaf(c,L,g,t){
-  if(g<=0)return;const len=L.l*g;
-  c.save();c.translate(L.ox,L.oy);c.rotate(L.a+Math.sin(t*.7+L.ox)*.015);
-  const gr=c.createLinearGradient(0,0,len,0);gr.addColorStop(0,'#1f6a2a');gr.addColorStop(.6,'#4fae45');gr.addColorStop(1,'#a6e07a');
-  c.fillStyle=gr;c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(len*.5,-L.w*g,len,0);c.quadraticCurveTo(len*.5,L.w*g,0,0);c.fill();
-  c.strokeStyle='rgba(220,255,200,.45)';c.lineWidth=.45;c.beginPath();c.moveTo(0,0);c.lineTo(len*.95,0);c.stroke();
-  c.strokeStyle='rgba(0,40,0,.4)';c.lineWidth=.4;c.beginPath();c.moveTo(0,.5);c.quadraticCurveTo(len*.5,L.w*g*.55,len,0);c.stroke();
-  c.restore();
-}
-const starR=rng(3), stars=Array.from({length:130},()=>[starR(),starR(),.25+starR()*.75]);
-function drawLily(c,t){
-  const lt=t-T_LILY, p=clamp(lt/LILY_GROW);
-  // while the eye is still zooming, the bouquet lives INSIDE the pupil
-  const pr=U*.0613*lastZoom, diag=Math.hypot(Vw,Vh)/2;
-  c.save();
-  if(t<T_ZOOM_END&&pr<diag){c.beginPath();c.arc(Vw/2,Vh/2,pr,0,TAU);c.clip();clipR2=pr*pr}else clipR2=Infinity;
-  c.fillStyle='#000';c.fillRect(0,0,Vw,Vh);
-  const sa=ease(clamp(lt/2));
-  stars.forEach(s=>{c.fillStyle=`rgba(255,255,255,${sa*s[2]*.7})`;c.fillRect(s[0]*Vw,s[1]*Vh,1,1)});
-  c.save();c.translate(Vw/2-50*lilyF,lilyY);c.scale(lilyF,lilyF);
-  // 1) stems rise first (thin green blades)
-  const q=clamp(p/.34), stemG=1-(1-q)*(1-q);   // ease-out: stems start rising immediately
-  FL.forEach(f=>{
-    const g=clamp(stemG*1.15-f.d*.3);
-    c.strokeStyle='#3a8a3a';c.lineWidth=.9;c.beginPath();
-    const mx=(BASE[0]+f.x)/2+f.bend,my=(BASE[1]+f.y)/2;
-    for(let k=0;k<=20;k++){const u=k/20*g,v=1-u,x=v*v*BASE[0]+2*v*u*mx+u*u*f.x,y=v*v*BASE[1]+2*v*u*my+u*u*f.y;k?c.lineTo(x,y):c.moveTo(x,y)}
-    c.stroke();
-  });
-  // 2) back leaves
-  LEAVES.filter(L=>!L.front).forEach(L=>leaf(c,L,ease(clamp((p-.12-L.dl)/.35)),t));
-  // 2b) small leaves along the stems
-  SL.forEach(L=>{const g=ease(clamp((stemG*1.1-L.u)/.25));if(g<=0)return;
-    const [x,y,ang]=stemPt(L.f,L.u);leaf(c,{ox:x,oy:y,a:ang+L.side*.75,l:L.l,w:L.w},g,t)});
-  // 3) cocoon-like buds form on the stem tips, hold, then peel open (back to front)
-  FL.forEach(f=>{
-    const tip=clamp(stemG*1.15-f.d*.3);
-    if(tip<.98)return;
-    const bg=clamp((p-.26-f.d*.12)/.22), b=f.nb?0:clamp((p-.52-f.d*.42)/.3);
-    if(bg<=0)return;
-    drawFlower(c,f,bg,b,t);
-  });
-  // 4) front leaves
-  LEAVES.filter(L=>L.front).forEach(L=>leaf(c,L,ease(clamp((p-.25-L.dl)/.4)),t));
-  c.restore();
-  c.restore();
-}
-
-/* =====================================================================
-   ASCII renderer
-   ===================================================================== */
-function render(t){
-  sctx.setTransform(1,0,0,1/CH_RATIO,0,0);       // virtual square px -> char grid
-  clipR2=Infinity;
-  if(t<T_ZOOM_END) drawEye(sctx,t); else {sctx.fillStyle='#000';sctx.fillRect(0,0,Vw,Vh)}
-  if(t>=T_LILY) drawLily(sctx,t);
-  // seamless black bridge exactly at the hand-off + fade-out at the end
-  let veil=0;
-  if(t>T_FADE_OUT) veil=ease(clamp((t-T_FADE_OUT)/(T_TOTAL-T_FADE_OUT)));
-  if(veil>0){sctx.fillStyle=`rgba(0,0,0,${veil})`;sctx.fillRect(0,0,Vw,Vh)}
-  sctx.setTransform(1,0,0,1,0,0);
-
-  const d=sctx.getImageData(0,0,cols,rows).data, nE=RAMP.length-1, nL=RAMP_L.length-1;
-  const W=out.width,H=out.height,sx=W/cols,sy=H/rows, lilyOn=t>=T_LILY;
-  octx.fillStyle='#000'; octx.fillRect(0,0,W,H);
-  octx.font=`${Math.round(sx/.55)}px "Courier New",monospace`; octx.textBaseline='top';
-  const hx=Vw/2, hy=Vh/2;
-  for(let y=0;y<rows;y++){
-    const vy=(y+.5)*CH_RATIO-hy, vy2=vy*vy;
-    for(let x=0;x<cols;x++){
-      const i=(y*cols+x)*4,r=d[i],g=d[i+1],b=d[i+2];
-      let L=(.299*r+.587*g+.114*b)/255; if(L<.045)continue;
-      const vx=x+.5-hx, inLily=lilyOn&&(vx*vx+vy2<=clipR2);
-      let ch,boost;
-      if(inLily){
-        if(y%2)L*=.92;                               // scan-line banding like the original
-        let k=Math.floor(Math.pow(Math.min(1,L),.5)*nL); if(k<6)k=6;
-        ch=RAMP_L[Math.min(nL,k)]; boost=1.75;
-      } else {
-        if(y%3===0)L*=1.25;
-        ch=RAMP[Math.min(nE,Math.floor(Math.pow(Math.min(1,L),.8)*nE))]; boost=1.15;
-      }
-      if(ch===' ')continue;
-      octx.fillStyle=`rgb(${Math.min(255,r*boost)|0},${Math.min(255,g*boost)|0},${Math.min(255,b*boost)|0})`;
-      octx.fillText(ch,x*sx,y*sy);
-      if(inLily)octx.fillText(ch,x*sx+sx*.28,y*sy);   // faux-bold: brighter, fuller glyphs
-    }
-  }
-  // DOM overlays
-  const lt=t-T_LILY;
-  if(HANDLE) hd.style.opacity = clamp((t-(T_FADE_OUT-4))/1)*(1-clamp((t-T_FADE_OUT)/1.5));
-}
-
-/* =====================================================================
-   loop
-   ===================================================================== */
-
-layout();
-const SKIP=+(new URLSearchParams(location.search).get('t')||0);   // ?t=15 jumps ahead (debug)
-let cost=0;
-let t0=performance.now()-SKIP*1000, last=0, done=false;
-function frame(now){
-  requestAnimationFrame(frame);
-  if(now-last<1000/FPS-1)return; last=now;
-  const _s=performance.now();
-  let t=(now-t0)/1000;
-  if(t>T_TOTAL){ if(LOOP){t0=now;t=0}else{t=T_TOTAL} }
-  render(t);
-  cost=cost*.9+(performance.now()-_s)*.1; FPS = cost>13 ? 30 : 60;
-}
-requestAnimationFrame(frame);
+function petalPath(c,len,w,curl,wave){c.beginPath();c.moveTo(0,0);c.bezierCurveTo(len*.2,-w*1.1,len*.5,-w*(1.06+wave),len*.8,-w*.5);c.quadraticCurveTo(len*.94,-w*.16,len,curl);c.quadraticCurveTo(len*.94,w*.2,len*.8,w*.5);c.bezierCurveTo(len*.5,w*(1.06-wave),len*.2,w*1.1,0,0);c.closePath()}
+function drawPetal(c,ang,len,w,pal,curl,wave,seed,bud){c.save();c.rotate(ang);const g=c.createLinearGradient(0,0,len,0);g.addColorStop(0,pal[0]);g.addColorStop(.2,pal[0]);g.addColorStop(.5,pal[1]);g.addColorStop(1,pal[2]);petalPath(c,len,w,curl,wave);c.fillStyle=g;c.fill();c.save();petalPath(c,len,w,curl,wave);c.clip();const h=c.createLinearGradient(0,-w,0,w);h.addColorStop(0,'rgba(255,255,255,.22)');h.addColorStop(.4,'rgba(255,255,255,.03)');h.addColorStop(.6,'rgba(0,0,0,.05)');h.addColorStop(1,'rgba(0,0,0,.22)');c.fillStyle=h;c.fillRect(0,-w*1.3,len,w*2.6);c.strokeStyle='rgba(0,0,0,.12)';c.lineWidth=.35;for(let k=-2;k<=2;k++){if(!k)continue;c.beginPath();c.moveTo(len*.08,k*w*.05);c.quadraticCurveTo(len*.5,k*w*.42,len*.9,k*w*.12+curl*.6);c.stroke()}c.fillStyle=pal[0];c.globalAlpha=.65;for(let k=0;k<9;k++){const u=.1+k*.045+((seed*7+k*13)%5)*.006,v=(((seed*3+k*17)%7)-3)*w*.07;c.beginPath();c.arc(len*u,v,.55+((k+seed)%3)*.12,0,TAU);c.fill()}c.globalAlpha=1;if(bud>0){c.fillStyle=`rgba(12,5,7,${bud*.38})`;c.fillRect(0,-w*1.3,len,w*2.6)}c.restore();petalPath(c,len,w,curl,wave);c.strokeStyle='rgba(0,0,0,.4)';c.lineWidth=.7;c.stroke();c.restore()}
+function drawFlower(c,f,bg,bloom,t){const pal=PAL[f.p],R=f.r*1.2,sz=ease(clamp(bg)),open=ease(clamp(bloom));c.save();c.translate(f.x+Math.sin(t*.6+f.x)*.25*open,f.y);c.scale(1,lerp(1,f.tilt,open));if(open<.95){c.save();c.rotate(f.ax+Math.PI);c.globalAlpha=1-open;c.fillStyle='#397b35';c.beginPath();c.ellipse(R*.06,0,R*.16*sz,R*.08*sz,0,0,TAU);c.fill();c.restore()}for(let pass=0;pass<2;pass++)for(let i=pass;i<6;i+=2){const po=ease(clamp((bloom-(pass?.16:0)-(i>>1)*.06)/.58)),closedAng=f.ax+(i-2.5)*.05,finalAng=i*Math.PI/3+f.j[i]+f.rot+Math.sin(t*.4+f.y)*.02,ang=lerpAng(closedAng,finalAng,po),len=R*(pass?.92:1)*sz*lerp(.8,1,po),w=R*lerp(.17,pass?.27:.31,po)*(.55+.45*sz);drawPetal(c,ang,len,w,pal,(pass?-1:1)*R*.07*po,f.j[i]*.6*po,i+Math.floor(f.x),(1-po)*sz)}const o=ease(clamp((bloom-.25)/.75));if(o>0){const tg=c.createRadialGradient(0,0,0,0,0,R*.2);tg.addColorStop(0,'rgba(160,175,75,.85)');tg.addColorStop(.5,pal[0]);tg.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=tg;c.beginPath();c.arc(0,0,R*.2*o,0,TAU);c.fill();for(let i=0;i<6;i++){const a=i*Math.PI/3+.5+f.j[i]+f.rot,L=R*(.36+(i%3)*.09)*o,x=Math.cos(a)*L,y=Math.sin(a)*L;c.strokeStyle='rgba(235,225,185,.85)';c.lineWidth=.5;c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(x*.5,y*.5-1.2,x,y);c.stroke();c.fillStyle='#b8480e';c.beginPath();c.ellipse(x,y,R*.1,R*.035,a,0,TAU);c.fill()}}c.restore()}
+function leaf(c,L,g,t){if(g<=0)return;const len=L.l*g;c.save();c.translate(L.ox,L.oy);c.rotate(L.a+Math.sin(t*.7+L.ox)*.015);const gr=c.createLinearGradient(0,0,len,0);gr.addColorStop(0,'#1c5725');gr.addColorStop(.6,'#3f8739');gr.addColorStop(1,'#82b85c');c.fillStyle=gr;c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(len*.5,-L.w*g,len,0);c.quadraticCurveTo(len*.5,L.w*g,0,0);c.fill();c.strokeStyle='rgba(200,240,180,.4)';c.lineWidth=.45;c.beginPath();c.moveTo(0,0);c.lineTo(len*.95,0);c.stroke();c.restore()}
+const starR=rng(3),stars=Array.from({length:130},()=>[starR(),starR(),.25+starR()*.75]);
+function drawLily(c,t){const lt=t-T_LILY,p=clamp(lt/T_LILY_GROW),pr=U*.0613*lastZoom,diag=Math.hypot(Vw,Vh)/2;c.save();if(t<T_ZOOM_END&&pr<diag){c.beginPath();c.arc(Vw/2,Vh/2,pr,0,TAU);c.clip();clipR2=pr*pr}else clipR2=Infinity;c.fillStyle='#000';c.fillRect(0,0,Vw,Vh);const sa=ease(clamp(lt/2));stars.forEach(s=>{c.fillStyle=`rgba(255,255,255,${sa*s[2]*.5})`;c.fillRect(s[0]*Vw,s[1]*Vh,1,1)});c.save();c.translate(Vw/2-50*lilyF,lilyY);c.scale(lilyF,lilyF);const q=clamp(p/.34),stemG=1-(1-q)*(1-q);FL.forEach(f=>{const g=clamp(stemG*1.15-f.d*.3);c.strokeStyle='#347333';c.lineWidth=.9;c.beginPath();const mx=(BASE[0]+f.x)/2+f.bend,my=(BASE[1]+f.y)/2;for(let k=0;k<=20;k++){const u=k/20*g,v=1-u,x=v*v*BASE[0]+2*v*u*mx+u*u*f.x,y=v*v*BASE[1]+2*v*u*my+u*u*f.y;k?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()});LEAVES.filter(L=>!L.front).forEach(L=>leaf(c,L,ease(clamp((p-.12-L.dl)/.35)),t));SL.forEach(L=>{const g=ease(clamp((stemG*1.1-L.u)/.25));if(g<=0)return;const [x,y,a]=stemPt(L.f,L.u);leaf(c,{ox:x,oy:y,a:a+L.side*.75,l:L.l,w:L.w},g,t)});FL.forEach(f=>{const tip=clamp(stemG*1.15-f.d*.3);if(tip<.98)return;const bg=clamp((p-.26-f.d*.12)/.22),b=f.nb?0:clamp((p-.52-f.d*.42)/.3);if(bg>0)drawFlower(c,f,bg,b,t)});LEAVES.filter(L=>L.front).forEach(L=>leaf(c,L,ease(clamp((p-.25-L.dl)/.4)),t));c.restore();c.restore()}
+function render(t){sctx.setTransform(1,0,0,1/CH_RATIO,0,0);clipR2=Infinity;if(t<T_ZOOM_END)drawEye(sctx,t);else{sctx.fillStyle='#000';sctx.fillRect(0,0,Vw,Vh)}if(t>=T_LILY)drawLily(sctx,t);let veil=0;if(t>T_FADE_OUT)veil=ease(clamp((t-T_FADE_OUT)/(TOTAL-T_FADE_OUT)));if(veil>0){sctx.fillStyle=`rgba(0,0,0,${veil})`;sctx.fillRect(0,0,Vw,Vh)}/* modest global brightness reduction */sctx.fillStyle='rgba(0,0,0,0.07)';sctx.fillRect(0,0,Vw,Vh);sctx.setTransform(1,0,0,1,0,0);const data=sctx.getImageData(0,0,cols,rows).data,nE=RAMP.length-1,nL=RAMP_L.length-1,W=vw,H=vh,sx=W/cols,sy=H/rows,lilyOn=t>=T_LILY;octx.fillStyle='#000';octx.fillRect(0,0,W,H);octx.font=`${Math.max(5,Math.round(sx/.55))}px "Courier New",monospace`;octx.textBaseline='top';const hx=Vw/2,hy=Vh/2;for(let y=0;y<rows;y++){const vy=(y+.5)*CH_RATIO-hy,vy2=vy*vy;for(let x=0;x<cols;x++){const i=(y*cols+x)*4,r=data[i],g=data[i+1],b=data[i+2];let L=(.299*r+.587*g+.114*b)/255;if(L<.045)continue;const vx=x+.5-hx,inLily=lilyOn&&(vx*vx+vy2<=clipR2);let ch,boost;if(inLily){if(y%2)L*=.92;const k=Math.floor(Math.sqrt(Math.min(1,L))*nL);ch=RAMP_L[Math.min(nL,Math.max(5,k))];boost=1.4}else{if(y%3===0)L=Math.min(1,L*1.15);ch=RAMP[Math.min(nE,Math.floor(Math.pow(Math.min(1,L),.8)*nE))];boost=1.02}if(ch===' ')continue;octx.fillStyle=`rgb(${Math.min(255,r*boost)|0},${Math.min(255,g*boost)|0},${Math.min(255,b*boost)|0})`;octx.fillText(ch,x*sx,y*sy);if(inLily)octx.fillText(ch,x*sx+sx*.2,y*sy)}}if(HANDLE)hd.style.opacity=clamp((t-(T_FADE_OUT-4))/1)*(1-clamp((t-T_FADE_OUT)/1.5))}
+layout();const SKIP=+(new URLSearchParams(location.search).get('t')||0);let startTime=performance.now()-SKIP*1000,lastFrame=0,frameCost=0,slowFrames=0,targetFPS=60;function frame(now){requestAnimationFrame(frame);if(now-lastFrame<1000/targetFPS)return;lastFrame=now;const start=performance.now();let t=(now-startTime)/1000;if(t>TOTAL){if(LOOP){startTime=now;t=0}else t=TOTAL}render(t);frameCost=frameCost*.9+(performance.now()-start)*.1;if(frameCost>18)slowFrames++;else slowFrames=Math.max(0,slowFrames-1);if(slowFrames>20)targetFPS=30;else if(slowFrames===0&&frameCost<10)targetFPS=60}requestAnimationFrame(frame);
 </script>
 </body>
 </html>
